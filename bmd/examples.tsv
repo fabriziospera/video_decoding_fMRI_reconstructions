@@ -1,0 +1,21 @@
+band	n	subject	stimulus	seed	video_50way	frame_50way	SSIM	caption	gt	recon
+best	1	10	vid1099	112	1.00	1.00	0.558	A person in a small boat turning around to go towards the shore.	best/best_01_subj10_vid1099_seed112_gt.mp4	best/best_01_subj10_vid1099_seed112_recon.mp4
+best	2	10	vid1046	79	0.92	0.94	0.557	A man rides a small wave, jumping into the air when it crests.	best/best_02_subj10_vid1046_seed79_gt.mp4	best/best_02_subj10_vid1046_seed79_recon.mp4
+best	3	6	vid1012	93	1.00	0.85	0.492	An orange cat in a basket playing with a gray cat that swats at it with its paw.	best/best_03_subj06_vid1012_seed93_gt.mp4	best/best_03_subj06_vid1012_seed93_recon.mp4
+best	4	4	vid1064	52	1.00	0.46	0.549	A medium sized dog lays and plays on a bed.	best/best_04_subj04_vid1064_seed52_gt.mp4	best/best_04_subj04_vid1064_seed52_recon.mp4
+best	5	5	vid1031	63	1.00	0.78	0.458	A young woman is swinging on the beach towards the water.	best/best_05_subj05_vid1031_seed63_gt.mp4	best/best_05_subj05_vid1031_seed63_recon.mp4
+best	6	5	vid1062	131	1.00	0.26	0.798	cute little dog running through the white snow playing fetch	best/best_06_subj05_vid1062_seed131_gt.mp4	best/best_06_subj05_vid1062_seed131_recon.mp4
+best	7	8	vid1006	98	1.00	0.71	0.484	A group of kids are sliding down a snowy bank.	best/best_07_subj08_vid1006_seed98_gt.mp4	best/best_07_subj08_vid1006_seed98_recon.mp4
+best	8	4	vid1028	107	1.00	0.75	0.539	Baby cooing and crawling across wooden floor towards person shooting video.	best/best_08_subj04_vid1028_seed107_gt.mp4	best/best_08_subj04_vid1028_seed107_recon.mp4
+best	9	7	vid1059	64	1.00	0.70	0.633	Little girl holding yellow item in her hand and looking up speaking.	best/best_09_subj07_vid1059_seed64_gt.mp4	best/best_09_subj07_vid1059_seed64_recon.mp4
+best	10	1	vid1065	46	1.00	1.00	0.350	A person is riding the rough rapids in a blue inflatable kayak.	best/best_10_subj01_vid1065_seed46_gt.mp4	best/best_10_subj01_vid1065_seed46_recon.mp4
+medium	1	10	vid1090	87	0.10	0.66	0.312	A group of people are on a stage playing instruments and moving around.	medium/medium_01_subj10_vid1090_seed87_gt.mp4	medium/medium_01_subj10_vid1090_seed87_recon.mp4
+medium	2	5	vid1021	51	0.75	0.28	0.368	Man recording a cooking video using pasta and chopsticks while narrating.	medium/medium_02_subj05_vid1021_seed51_gt.mp4	medium/medium_02_subj05_vid1021_seed51_recon.mp4
+medium	3	7	vid1101	137	0.49	0.72	0.293	There is a massive waterfall that is flowing down the side of a cliff.	medium/medium_03_subj07_vid1101_seed137_gt.mp4	medium/medium_03_subj07_vid1101_seed137_recon.mp4
+medium	4	4	vid1030	48	0.02	0.73	0.385	A man in a red weightlifting suit drops a large dumbbell from above his head	medium/medium_04_subj04_vid1030_seed48_gt.mp4	medium/medium_04_subj04_vid1030_seed48_recon.mp4
+medium	5	9	vid1066	133	0.00	0.27	0.539	A sport team moving a direction while one is standing from the floor.	medium/medium_05_subj09_vid1066_seed133_gt.mp4	medium/medium_05_subj09_vid1066_seed133_recon.mp4
+medium	6	1	vid1092	94	0.81	0.21	0.294	A group of children are playing in a large bouncy house.	medium/medium_06_subj01_vid1092_seed94_gt.mp4	medium/medium_06_subj01_vid1092_seed94_recon.mp4
+worst	1	9	vid1085	97	0.00	0.00	0.100	Rats eating wood chips? Hmm, I have an idea for a plant-based burger.	worst/worst_01_subj09_vid1085_seed97_gt.mp4	worst/worst_01_subj09_vid1085_seed97_recon.mp4
+worst	2	1	vid1033	125	0.00	0.00	0.263	A group of ice skaters skating on a public rink in front of an urban Christmas tree.	worst/worst_02_subj01_vid1033_seed125_gt.mp4	worst/worst_02_subj01_vid1033_seed125_recon.mp4
+worst	3	4	vid1043	46	0.00	0.01	0.229	A eagle sits on a tree branch chewing on food.	worst/worst_03_subj04_vid1043_seed46_gt.mp4	worst/worst_03_subj04_vid1043_seed46_recon.mp4
+worst	4	8	vid1015	75	0.00	0.00	0.223	A scuba diver is under water with some colorful fish.	worst/worst_04_subj08_vid1015_seed75_gt.mp4	worst/worst_04_subj08_vid1015_seed75_recon.mp4

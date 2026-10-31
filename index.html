@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fMRI-to-Video Reconstructions</title>
+<meta name="description" content="Ground-truth clips next to brain-reranked reconstructions on CC2017 and BOLD Moments.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f7f5; --card: #ffffff; --ink: #1c1d1f; --muted: #6b6f76; --line: #e4e4e0;
+    --accent: #2f5bd3; --good: #1f8a4c; --mid: #b7791f; --poor: #c0392b;
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121315; --card: #1b1c1f; --ink: #ececec; --muted: #9a9ea6; --line: #2c2e33;
+      --accent: #7b9cff; --good: #4cc483; --mid: #e0a84a; --poor: #ef6b5b;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.5 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+
+  header { padding: 48px 0 20px; }
+  h1 { font-size: clamp(26px, 4vw, 38px); line-height: 1.15; margin: 0 0 10px; letter-spacing: -0.02em; }
+  .lede { color: var(--muted); max-width: 760px; margin: 0; }
+
+  nav.tabs { position: sticky; top: 0; z-index: 5; background: var(--bg);
+             border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+  nav.tabs .wrap { display: flex; gap: 6px; padding-top: 10px; padding-bottom: 10px; flex-wrap: wrap; }
+  .tab { border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer;
+         padding: 8px 16px; border-radius: 999px; font: inherit; font-weight: 500; }
+  .tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .ds-note { color: var(--muted); font-size: 13px; margin: 18px 0 0; }
+
+  section.band { margin: 30px 0 44px; }
+  .band-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .band-head h2 { margin: 0; font-size: 21px; }
+  .band-head p { margin: 0; color: var(--muted); font-size: 14px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+  .best .dot { background: var(--good); } .medium .dot { background: var(--mid); } .worst .dot { background: var(--poor); }
+
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+          padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  figure { margin: 0; }
+  video { width: 100%; aspect-ratio: 1 / 1; display: block; border-radius: 9px; background: #000;
+          image-rendering: auto; }
+  figcaption { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted);
+               margin-top: 5px; text-align: center; }
+  .meta { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--muted); }
+  .cap { font-size: 13.5px; margin: 0; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line);
+          color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  footer { color: var(--muted); font-size: 13px; padding: 24px 0 48px; border-top: 1px solid var(--line); }
+  @media (max-width: 420px) { .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="wrap">
+  <h1>fMRI-to-Video Reconstructions</h1>
+  <p class="lede">Each card shows the clip the subject watched (left) next to the reconstruction chosen by the
+    brain-only reranker from 100 candidates (right). Both play in sync at the same duration and resolution.
+    Examples are grouped by quality according to the official metrics.</p>
+</header>
+
+<nav class="tabs" aria-label="Dataset"><div class="wrap" id="tabs" role="tablist"></div></nav>
+
+<main class="wrap" id="main"></main>
+
+<footer class="wrap">
+  Metrics per example: 50-way identification accuracy for video and frames, and SSIM.
+  Reconstructions are resized to the ground-truth resolution without cropping.
+</footer>
+
+<script>
+const CFG = {"data": {"cc2017": {"best": [{"subj": 1, "stim": "395", "cap": "a red and white airplane flying through a blue sky", "v50": 1.0, "f50": 1.0, "ssim": 0.901, "gt": "cc2017/best/best_01_subj1_stim395_seed92_gt.mp4", "rec": "cc2017/best/best_01_subj1_stim395_seed92_recon.mp4"}, {"subj": 1, "stim": "144", "cap": "an image of a woman with long black hair", "v50": 0.75, "f50": 0.93, "ssim": 0.584, "gt": "cc2017/best/best_02_subj1_stim144_seed42_gt.mp4", "rec": "cc2017/best/best_02_subj1_stim144_seed42_recon.mp4"}, {"subj": 1, "stim": "1085", "cap": "a large group of fish swimming in the water", "v50": 1.0, "f50": 0.8, "ssim": 0.524, "gt": "cc2017/best/best_03_subj1_stim1085_seed52_gt.mp4", "rec": "cc2017/best/best_03_subj1_stim1085_seed52_recon.mp4"}, {"subj": 1, "stim": "180", "cap": "an aerial view of a large cargo ship in the ocean", "v50": 1.0, "f50": 0.9, "ssim": 0.502, "gt": "cc2017/best/best_04_subj1_stim180_seed103_gt.mp4", "rec": "cc2017/best/best_04_subj1_stim180_seed103_recon.mp4"}, {"subj": 1, "stim": "59", "cap": "a man in a maroon shirt looking down at his cell phone", "v50": 1.0, "f50": 0.93, "ssim": 0.468, "gt": "cc2017/best/best_05_subj1_stim59_seed50_gt.mp4", "rec": "cc2017/best/best_05_subj1_stim59_seed50_recon.mp4"}, {"subj": 2, "stim": "220", "cap": "a man is dancing on a white background", "v50": 0.85, "f50": 0.66, "ssim": 0.648, "gt": "cc2017/best/best_06_subj2_stim220_seed64_gt.mp4", "rec": "cc2017/best/best_06_subj2_stim220_seed64_recon.mp4"}, {"subj": 2, "stim": "163", "cap": "a man is doing a yoga pose on a blue mat", "v50": 1.0, "f50": 0.69, "ssim": 0.722, "gt": "cc2017/best/best_07_subj2_stim163_seed135_gt.mp4", "rec": "cc2017/best/best_07_subj2_stim163_seed135_recon.mp4"}, {"subj": 2, "stim": "1180", "cap": "a dog laying on the floor next to a person", "v50": 1.0, "f50": 0.67, "ssim": 0.536, "gt": "cc2017/best/best_08_subj2_stim1180_seed57_gt.mp4", "rec": "cc2017/best/best_08_subj2_stim1180_seed57_recon.mp4"}, {"subj": 3, "stim": "95", "cap": "a jellyfish floating in the ocean with its head out of the water", "v50": 1.0, "f50": 0.97, "ssim": 0.789, "gt": "cc2017/best/best_09_subj3_stim95_seed118_gt.mp4", "rec": "cc2017/best/best_09_subj3_stim95_seed118_recon.mp4"}, {"subj": 3, "stim": "839", "cap": "a humpback whale swimming near the surface of the water", "v50": 1.0, "f50": 0.66, "ssim": 0.831, "gt": "cc2017/best/best_10_subj3_stim839_seed60_gt.mp4", "rec": "cc2017/best/best_10_subj3_stim839_seed60_recon.mp4"}], "medium": [{"subj": 2, "stim": "509", "cap": "a man is walking down the aisle of a train", "v50": 0.4, "f50": 0.03, "ssim": 0.364, "gt": "cc2017/medium/medium_01_subj2_stim509_seed136_gt.mp4", "rec": "cc2017/medium/medium_01_subj2_stim509_seed136_recon.mp4"}, {"subj": 2, "stim": "911", "cap": "a group of people walking down an empty street", "v50": 0.0, "f50": 0.47, "ssim": 0.341, "gt": "cc2017/medium/medium_02_subj2_stim911_seed48_gt.mp4", "rec": "cc2017/medium/medium_02_subj2_stim911_seed48_recon.mp4"}, {"subj": 3, "stim": "1122", "cap": "a group of people sitting around in a hut", "v50": 0.13, "f50": 0.38, "ssim": 0.302, "gt": "cc2017/medium/medium_03_subj3_stim1122_seed76_gt.mp4", "rec": "cc2017/medium/medium_03_subj3_stim1122_seed76_recon.mp4"}, {"subj": 1, "stim": "47", "cap": "an aerial view of a beach with houses on it", "v50": 0.0, "f50": 0.92, "ssim": 0.286, "gt": "cc2017/medium/medium_04_subj1_stim47_seed43_gt.mp4", "rec": "cc2017/medium/medium_04_subj1_stim47_seed43_recon.mp4"}, {"subj": 3, "stim": "120", "cap": "a man in a cowboy hat is holding a gun", "v50": 0.0, "f50": 0.28, "ssim": 0.437, "gt": "cc2017/medium/medium_05_subj3_stim120_seed99_gt.mp4", "rec": "cc2017/medium/medium_05_subj3_stim120_seed99_recon.mp4"}, {"subj": 2, "stim": "1165", "cap": "an older woman driving a silver sports car", "v50": 0.0, "f50": 0.09, "ssim": 0.467, "gt": "cc2017/medium/medium_06_subj2_stim1165_seed80_gt.mp4", "rec": "cc2017/medium/medium_06_subj2_stim1165_seed80_recon.mp4"}], "worst": [{"subj": 3, "stim": "64", "cap": "a heart shaped arrangement of red candles in the shape of a heart", "v50": 0.0, "f50": 0.0, "ssim": 0.033, "gt": "cc2017/worst/worst_01_subj3_stim64_seed47_gt.mp4", "rec": "cc2017/worst/worst_01_subj3_stim64_seed47_recon.mp4"}, {"subj": 1, "stim": "232", "cap": "a close up of a flame on a black background", "v50": 0.0, "f50": 0.0, "ssim": 0.11, "gt": "cc2017/worst/worst_02_subj1_stim232_seed99_gt.mp4", "rec": "cc2017/worst/worst_02_subj1_stim232_seed99_recon.mp4"}, {"subj": 1, "stim": "189", "cap": "two red and white balloons floating in the air", "v50": 0.0, "f50": 0.0, "ssim": 0.109, "gt": "cc2017/worst/worst_03_subj1_stim189_seed91_gt.mp4", "rec": "cc2017/worst/worst_03_subj1_stim189_seed91_recon.mp4"}, {"subj": 2, "stim": "741", "cap": "the big ben clock tower in london, england", "v50": 0.0, "f50": 0.0, "ssim": 0.166, "gt": "cc2017/worst/worst_04_subj2_stim741_seed48_gt.mp4", "rec": "cc2017/worst/worst_04_subj2_stim741_seed48_recon.mp4"}]}, "bmd": {"best": [{"subj": 10, "stim": "vid1099", "cap": "A person in a small boat turning around to go towards the shore.", "v50": 1.0, "f50": 1.0, "ssim": 0.558, "gt": "bmd/best/best_01_subj10_vid1099_seed112_gt.mp4", "rec": "bmd/best/best_01_subj10_vid1099_seed112_recon.mp4"}, {"subj": 10, "stim": "vid1046", "cap": "A man rides a small wave, jumping into the air when it crests.", "v50": 0.92, "f50": 0.94, "ssim": 0.557, "gt": "bmd/best/best_02_subj10_vid1046_seed79_gt.mp4", "rec": "bmd/best/best_02_subj10_vid1046_seed79_recon.mp4"}, {"subj": 6, "stim": "vid1012", "cap": "An orange cat in a basket playing with a gray cat that swats at it with its paw.", "v50": 1.0, "f50": 0.85, "ssim": 0.492, "gt": "bmd/best/best_03_subj06_vid1012_seed93_gt.mp4", "rec": "bmd/best/best_03_subj06_vid1012_seed93_recon.mp4"}, {"subj": 4, "stim": "vid1064", "cap": "A medium sized dog lays and plays on a bed.", "v50": 1.0, "f50": 0.46, "ssim": 0.549, "gt": "bmd/best/best_04_subj04_vid1064_seed52_gt.mp4", "rec": "bmd/best/best_04_subj04_vid1064_seed52_recon.mp4"}, {"subj": 5, "stim": "vid1031", "cap": "A young woman is swinging on the beach towards the water.", "v50": 1.0, "f50": 0.78, "ssim": 0.458, "gt": "bmd/best/best_05_subj05_vid1031_seed63_gt.mp4", "rec": "bmd/best/best_05_subj05_vid1031_seed63_recon.mp4"}, {"subj": 5, "stim": "vid1062", "cap": "cute little dog running through the white snow playing fetch", "v50": 1.0, "f50": 0.26, "ssim": 0.798, "gt": "bmd/best/best_06_subj05_vid1062_seed131_gt.mp4", "rec": "bmd/best/best_06_subj05_vid1062_seed131_recon.mp4"}, {"subj": 8, "stim": "vid1006", "cap": "A group of kids are sliding down a snowy bank.", "v50": 1.0, "f50": 0.71, "ssim": 0.484, "gt": "bmd/best/best_07_subj08_vid1006_seed98_gt.mp4", "rec": "bmd/best/best_07_subj08_vid1006_seed98_recon.mp4"}, {"subj": 4, "stim": "vid1028", "cap": "Baby cooing and crawling across wooden floor towards person shooting video.", "v50": 1.0, "f50": 0.75, "ssim": 0.539, "gt": "bmd/best/best_08_subj04_vid1028_seed107_gt.mp4", "rec": "bmd/best/best_08_subj04_vid1028_seed107_recon.mp4"}, {"subj": 7, "stim": "vid1059", "cap": "Little girl holding yellow item in her hand and looking up speaking.", "v50": 1.0, "f50": 0.7, "ssim": 0.633, "gt": "bmd/best/best_09_subj07_vid1059_seed64_gt.mp4", "rec": "bmd/best/best_09_subj07_vid1059_seed64_recon.mp4"}, {"subj": 1, "stim": "vid1065", "cap": "A person is riding the rough rapids in a blue inflatable kayak.", "v50": 1.0, "f50": 1.0, "ssim": 0.35, "gt": "bmd/best/best_10_subj01_vid1065_seed46_gt.mp4", "rec": "bmd/best/best_10_subj01_vid1065_seed46_recon.mp4"}], "medium": [{"subj": 10, "stim": "vid1090", "cap": "A group of people are on a stage playing instruments and moving around.", "v50": 0.1, "f50": 0.66, "ssim": 0.312, "gt": "bmd/medium/medium_01_subj10_vid1090_seed87_gt.mp4", "rec": "bmd/medium/medium_01_subj10_vid1090_seed87_recon.mp4"}, {"subj": 5, "stim": "vid1021", "cap": "Man recording a cooking video using pasta and chopsticks while narrating.", "v50": 0.75, "f50": 0.28, "ssim": 0.368, "gt": "bmd/medium/medium_02_subj05_vid1021_seed51_gt.mp4", "rec": "bmd/medium/medium_02_subj05_vid1021_seed51_recon.mp4"}, {"subj": 7, "stim": "vid1101", "cap": "There is a massive waterfall that is flowing down the side of a cliff.", "v50": 0.49, "f50": 0.72, "ssim": 0.293, "gt": "bmd/medium/medium_03_subj07_vid1101_seed137_gt.mp4", "rec": "bmd/medium/medium_03_subj07_vid1101_seed137_recon.mp4"}, {"subj": 4, "stim": "vid1030", "cap": "A man in a red weightlifting suit drops a large dumbbell from above his head", "v50": 0.02, "f50": 0.73, "ssim": 0.385, "gt": "bmd/medium/medium_04_subj04_vid1030_seed48_gt.mp4", "rec": "bmd/medium/medium_04_subj04_vid1030_seed48_recon.mp4"}, {"subj": 9, "stim": "vid1066", "cap": "A sport team moving a direction while one is standing from the floor.", "v50": 0.0, "f50": 0.27, "ssim": 0.539, "gt": "bmd/medium/medium_05_subj09_vid1066_seed133_gt.mp4", "rec": "bmd/medium/medium_05_subj09_vid1066_seed133_recon.mp4"}, {"subj": 1, "stim": "vid1092", "cap": "A group of children are playing in a large bouncy house.", "v50": 0.81, "f50": 0.21, "ssim": 0.294, "gt": "bmd/medium/medium_06_subj01_vid1092_seed94_gt.mp4", "rec": "bmd/medium/medium_06_subj01_vid1092_seed94_recon.mp4"}], "worst": [{"subj": 9, "stim": "vid1085", "cap": "Rats eating wood chips? Hmm, I have an idea for a plant-based burger.", "v50": 0.0, "f50": 0.0, "ssim": 0.1, "gt": "bmd/worst/worst_01_subj09_vid1085_seed97_gt.mp4", "rec": "bmd/worst/worst_01_subj09_vid1085_seed97_recon.mp4"}, {"subj": 1, "stim": "vid1033", "cap": "A group of ice skaters skating on a public rink in front of an urban Christmas tree.", "v50": 0.0, "f50": 0.0, "ssim": 0.263, "gt": "bmd/worst/worst_02_subj01_vid1033_seed125_gt.mp4", "rec": "bmd/worst/worst_02_subj01_vid1033_seed125_recon.mp4"}, {"subj": 4, "stim": "vid1043", "cap": "A eagle sits on a tree branch chewing on food.", "v50": 0.0, "f50": 0.01, "ssim": 0.229, "gt": "bmd/worst/worst_03_subj04_vid1043_seed46_gt.mp4", "rec": "bmd/worst/worst_03_subj04_vid1043_seed46_recon.mp4"}, {"subj": 8, "stim": "vid1015", "cap": "A scuba diver is under water with some colorful fish.", "v50": 0.0, "f50": 0.0, "ssim": 0.223, "gt": "bmd/worst/worst_04_subj08_vid1015_seed75_gt.mp4", "rec": "bmd/worst/worst_04_subj08_vid1015_seed75_recon.mp4"}]}}, "datasets": [["cc2017", "CC2017", "Wen et al. (2018) · 3 subjects · 2 s clips (6 frames at 3 fps)"], ["bmd", "BOLD Moments", "Lahner et al. (2024) · 10 subjects · 3 s clips"]], "bands": [["best", "Best", "Top reconstructions by the official metrics, content checked by eye."], ["medium", "Medium", "Around the median: scene type or layout right, details wrong."], ["worst", "Worst", "Bottom of the ranking: content not recovered."]]};
+const tabs = document.getElementById("tabs"), main = document.getElementById("main");
+const esc = s => s.replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+
+// Play only what is on screen; restart GT and reconstruction together so they stay aligned.
+const io = new IntersectionObserver(es => es.forEach(e => {
+  e.target.querySelectorAll("video").forEach(v => e.isIntersecting ? v.play().catch(() => {}) : v.pause());
+}), {rootMargin: "100px"});
+
+function syncPair(pair) {
+  const vs = [...pair.querySelectorAll("video")];
+  let ended = 0;
+  vs.forEach(v => v.addEventListener("ended", () => {
+    if (++ended < vs.length) return;
+    ended = 0;
+    vs.forEach(x => { x.currentTime = 0; x.play().catch(() => {}); });
+  }));
+}
+
+function card(x, key) {
+  const stim = key === "cc2017" ? `clip ${x.stim}` : x.stim;
+  return `<article class="card">
+    <div class="pair">
+      <figure><video src="${x.gt}" muted playsinline preload="metadata"></video><figcaption>Ground truth</figcaption></figure>
+      <figure><video src="${x.rec}" muted playsinline preload="metadata"></video><figcaption>Reconstruction</figcaption></figure>
+    </div>
+    <div class="meta"><span>Subject ${x.subj}</span><span>${esc(stim)}</span></div>
+    <p class="cap">${esc(x.cap)}</p>
+    <div class="chips">
+      <span class="chip">video 50-way ${x.v50.toFixed(2)}</span>
+      <span class="chip">frame 50-way ${x.f50.toFixed(2)}</span>
+      <span class="chip">SSIM ${x.ssim.toFixed(3)}</span>
+    </div>
+  </article>`;
+}
+
+function show(key) {
+  io.disconnect();
+  [...tabs.children].forEach(t => t.setAttribute("aria-selected", t.dataset.key === key));
+  const ds = CFG.datasets.find(d => d[0] === key);
+  main.innerHTML = `<p class="ds-note">${esc(ds[2])}</p>` + CFG.bands.map(([b, name, desc]) => `
+    <section class="band ${b}">
+      <div class="band-head"><h2><span class="dot"></span>${name}</h2><p>${esc(desc)}</p></div>
+      <div class="grid">${CFG.data[key][b].map(x => card(x, key)).join("")}</div>
+    </section>`).join("");
+  main.querySelectorAll(".pair").forEach(p => { syncPair(p); io.observe(p); });
+  history.replaceState(null, "", "#" + key);
+}
+
+CFG.datasets.forEach(([key, name]) => {
+  const b = document.createElement("button");
+  b.className = "tab"; b.role = "tab"; b.dataset.key = key; b.textContent = name;
+  b.onclick = () => show(key);
+  tabs.appendChild(b);
+});
+show(CFG.datasets.some(d => "#" + d[0] === location.hash) ? location.hash.slice(1) : CFG.datasets[0][0]);
+</script>
+</body>
+</html>

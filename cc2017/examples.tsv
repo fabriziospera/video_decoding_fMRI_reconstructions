@@ -1,0 +1,21 @@
+band	n	subject	stimulus	seed	video_50way	frame_50way	SSIM	caption	gt	recon
+best	1	1	395	92	1.00	1.00	0.901	a red and white airplane flying through a blue sky	best/best_01_subj1_stim395_seed92_gt.mp4	best/best_01_subj1_stim395_seed92_recon.mp4
+best	2	1	144	42	0.75	0.93	0.584	an image of a woman with long black hair	best/best_02_subj1_stim144_seed42_gt.mp4	best/best_02_subj1_stim144_seed42_recon.mp4
+best	3	1	1085	52	1.00	0.80	0.524	a large group of fish swimming in the water	best/best_03_subj1_stim1085_seed52_gt.mp4	best/best_03_subj1_stim1085_seed52_recon.mp4
+best	4	1	180	103	1.00	0.90	0.502	an aerial view of a large cargo ship in the ocean	best/best_04_subj1_stim180_seed103_gt.mp4	best/best_04_subj1_stim180_seed103_recon.mp4
+best	5	1	59	50	1.00	0.93	0.468	a man in a maroon shirt looking down at his cell phone	best/best_05_subj1_stim59_seed50_gt.mp4	best/best_05_subj1_stim59_seed50_recon.mp4
+best	6	2	220	64	0.85	0.66	0.648	a man is dancing on a white background	best/best_06_subj2_stim220_seed64_gt.mp4	best/best_06_subj2_stim220_seed64_recon.mp4
+best	7	2	163	135	1.00	0.69	0.722	a man is doing a yoga pose on a blue mat	best/best_07_subj2_stim163_seed135_gt.mp4	best/best_07_subj2_stim163_seed135_recon.mp4
+best	8	2	1180	57	1.00	0.67	0.536	a dog laying on the floor next to a person	best/best_08_subj2_stim1180_seed57_gt.mp4	best/best_08_subj2_stim1180_seed57_recon.mp4
+best	9	3	95	118	1.00	0.97	0.789	a jellyfish floating in the ocean with its head out of the water	best/best_09_subj3_stim95_seed118_gt.mp4	best/best_09_subj3_stim95_seed118_recon.mp4
+best	10	3	839	60	1.00	0.66	0.831	a humpback whale swimming near the surface of the water	best/best_10_subj3_stim839_seed60_gt.mp4	best/best_10_subj3_stim839_seed60_recon.mp4
+medium	1	2	509	136	0.40	0.03	0.364	a man is walking down the aisle of a train	medium/medium_01_subj2_stim509_seed136_gt.mp4	medium/medium_01_subj2_stim509_seed136_recon.mp4
+medium	2	2	911	48	0.00	0.47	0.341	a group of people walking down an empty street	medium/medium_02_subj2_stim911_seed48_gt.mp4	medium/medium_02_subj2_stim911_seed48_recon.mp4
+medium	3	3	1122	76	0.13	0.38	0.302	a group of people sitting around in a hut	medium/medium_03_subj3_stim1122_seed76_gt.mp4	medium/medium_03_subj3_stim1122_seed76_recon.mp4
+medium	4	1	47	43	0.00	0.92	0.286	an aerial view of a beach with houses on it	medium/medium_04_subj1_stim47_seed43_gt.mp4	medium/medium_04_subj1_stim47_seed43_recon.mp4
+medium	5	3	120	99	0.00	0.28	0.437	a man in a cowboy hat is holding a gun	medium/medium_05_subj3_stim120_seed99_gt.mp4	medium/medium_05_subj3_stim120_seed99_recon.mp4
+medium	6	2	1165	80	0.00	0.09	0.467	an older woman driving a silver sports car	medium/medium_06_subj2_stim1165_seed80_gt.mp4	medium/medium_06_subj2_stim1165_seed80_recon.mp4
+worst	1	3	64	47	0.00	0.00	0.033	a heart shaped arrangement of red candles in the shape of a heart	worst/worst_01_subj3_stim64_seed47_gt.mp4	worst/worst_01_subj3_stim64_seed47_recon.mp4
+worst	2	1	232	99	0.00	0.00	0.110	a close up of a flame on a black background	worst/worst_02_subj1_stim232_seed99_gt.mp4	worst/worst_02_subj1_stim232_seed99_recon.mp4
+worst	3	1	189	91	0.00	0.00	0.109	two red and white balloons floating in the air	worst/worst_03_subj1_stim189_seed91_gt.mp4	worst/worst_03_subj1_stim189_seed91_recon.mp4
+worst	4	2	741	48	0.00	0.00	0.166	the big ben clock tower in london, england	worst/worst_04_subj2_stim741_seed48_gt.mp4	worst/worst_04_subj2_stim741_seed48_recon.mp4
