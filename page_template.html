@@ -54,9 +54,6 @@
                margin-top: 5px; text-align: center; }
   .meta { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; color: var(--muted); }
   .cap { font-size: 13.5px; margin: 0; }
-  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
-  .chip { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line);
-          color: var(--muted); font-variant-numeric: tabular-nums; }
 
   footer { color: var(--muted); font-size: 13px; padding: 24px 0 48px; border-top: 1px solid var(--line); }
   @media (max-width: 420px) { .grid { grid-template-columns: 1fr; } }
@@ -75,7 +72,6 @@
 <main class="wrap" id="main"></main>
 
 <footer class="wrap">
-  Metrics per example: 50-way identification accuracy for video and frames, and SSIM.
   Reconstructions are resized to the ground-truth resolution without cropping.
 </footer>
 
@@ -108,11 +104,6 @@ function card(x, key) {
     </div>
     <div class="meta"><span>Subject ${x.subj}</span><span>${esc(stim)}</span></div>
     <p class="cap">${esc(x.cap)}</p>
-    <div class="chips">
-      <span class="chip">video 50-way ${x.v50.toFixed(2)}</span>
-      <span class="chip">frame 50-way ${x.f50.toFixed(2)}</span>
-      <span class="chip">SSIM ${x.ssim.toFixed(3)}</span>
-    </div>
   </article>`;
 }
 

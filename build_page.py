@@ -21,7 +21,6 @@ data = {}
 for key, *_ in DATASETS:
     rows = list(csv.DictReader(open(HERE / key / "examples.tsv"), delimiter="\t"))
     data[key] = {b: [dict(subj=int(r["subject"]), stim=r["stimulus"], cap=r["caption"].strip(),
-                          v50=float(r["video_50way"]), f50=float(r["frame_50way"]), ssim=float(r["SSIM"]),
                           gt=f"{key}/{r['gt']}", rec=f"{key}/{r['recon']}")
                      for r in rows if r["band"] == b] for b, *_ in BANDS}
 
