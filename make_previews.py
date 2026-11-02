@@ -12,7 +12,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = Path(__file__).resolve().parent
-PICK = {"cc2017": [1, 2, 6, 8], "bmd": [1, 3, 5, 9]}          # rows of the "best" band
+PICK = {"cc2017": [1, 2, 6, 8], "bmd": [3, 4, 9, 5]}          # rows of the "best" band
 TILE, GAP, LABEL_W, FPS = 180, 6, 140, 8
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
