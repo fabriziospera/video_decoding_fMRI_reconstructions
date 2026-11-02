@@ -1,9 +1,13 @@
-"""Animated previews for the README: per dataset, a few examples with the ground truth above and
-the reconstruction below, playing in sync.
+"""README with every reconstruction visible on the repository page.
 
-Usage:  python make_previews.py      -> previews/cc2017.gif, previews/bmd.gif
+GitHub does not autoplay videos inside a README, so each example becomes a small animated gif:
+ground truth on the left, reconstruction on the right, playing in sync. README.md is written
+from <dataset>/examples.tsv, so both stay consistent with the gallery.
+
+Usage:  python make_previews.py      -> previews/<dataset>/<band>_<nn>.gif and README.md
 """
 import csv
+import html
 from pathlib import Path
 
 import av
@@ -12,8 +16,10 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = Path(__file__).resolve().parent
-PICK = {"cc2017": [1, 2, 6, 8], "bmd": [3, 4, 9, 5]}          # rows of the "best" band
-TILE, GAP, LABEL_W, FPS = 180, 6, 140, 8
+GALLERY = "https://fabriziospera.github.io/video_decoding_fMRI_reconstructions/"
+DATASETS = [("cc2017", "CC2017"), ("bmd", "BOLD Moments")]
+BANDS = [("best", "Best"), ("medium", "Medium"), ("worst", "Worst")]
+TILE, GAP, HEAD, FPS, PER_ROW = 180, 4, 20, 8, 2
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
 
@@ -29,33 +35,53 @@ def at(video, duration, t):
     return video[min(int(t / duration * len(video)), len(video) - 1)]
 
 
+def pair_gif(gt_path, rec_path, dst, font):
+    (gt, dg), (rc, dr) = frames(gt_path), frames(rec_path)
+    W, H = 2 * TILE + GAP, HEAD + TILE
+    out = []
+    for k in range(int(round(dg * FPS))):
+        t = (k + 0.5) / FPS
+        canvas = Image.new("RGB", (W, H), "white")
+        d = ImageDraw.Draw(canvas)
+        d.text((TILE // 2, 2), "Ground truth", fill="black", font=font, anchor="mt")
+        d.text((TILE + GAP + TILE // 2, 2), "Reconstruction", fill="black", font=font, anchor="mt")
+        canvas.paste(Image.fromarray(at(gt, dg, t)).resize((TILE, TILE), Image.LANCZOS), (0, HEAD))
+        canvas.paste(Image.fromarray(at(rc, dr, t)).resize((TILE, TILE), Image.LANCZOS), (TILE + GAP, HEAD))
+        out.append(np.asarray(canvas))
+    iio.imwrite(dst, np.stack(out), extension=".gif", duration=1000 / FPS, loop=0)
+
+
 def main():
-    out = HERE / "previews"
-    out.mkdir(exist_ok=True)
-    font = ImageFont.truetype(FONT, 15)
-    for ds, picks in PICK.items():
-        rows = {int(r["n"]): r for r in csv.DictReader(open(HERE / ds / "examples.tsv"), delimiter="\t")
-                if r["band"] == "best"}
-        clips = [(frames(HERE / ds / rows[n]["gt"]), frames(HERE / ds / rows[n]["recon"])) for n in picks]
-        duration = clips[0][0][1]
-        n_out = int(round(duration * FPS))
-        W = LABEL_W + len(clips) * (TILE + GAP)
-        H = 2 * TILE + 3 * GAP
-        out_frames = []
-        for k in range(n_out):
-            t = (k + 0.5) / FPS
-            canvas = Image.new("RGB", (W, H), "white")
-            d = ImageDraw.Draw(canvas)
-            d.text((8, GAP + TILE // 2 - 9), "Ground truth", fill="black", font=font)
-            d.text((8, 2 * GAP + TILE + TILE // 2 - 9), "Reconstruction", fill="black", font=font)
-            for j, ((gt, dg), (rc, dr)) in enumerate(clips):
-                x = LABEL_W + j * (TILE + GAP)
-                canvas.paste(Image.fromarray(at(gt, dg, t)).resize((TILE, TILE), Image.LANCZOS), (x, GAP))
-                canvas.paste(Image.fromarray(at(rc, dr, t)).resize((TILE, TILE), Image.LANCZOS), (x, 2 * GAP + TILE))
-            out_frames.append(np.asarray(canvas))
-        dst = out / f"{ds}.gif"
-        iio.imwrite(dst, np.stack(out_frames), extension=".gif", duration=1000 / FPS, loop=0)
-        print(f"written {dst} ({len(out_frames)} frames, {dst.stat().st_size / 1e6:.1f} MB)")
+    font = ImageFont.truetype(FONT, 13)
+    md = ["# fMRI-to-Video Reconstructions", "",
+          f"### ▶ [Open the gallery as a web page]({GALLERY})", "",
+          "Every reconstruction plays next to the clip the subject watched. For each dataset: 10 best,",
+          "6 medium and 4 worst examples.", ""]
+    for ds, ds_name in DATASETS:
+        rows = list(csv.DictReader(open(HERE / ds / "examples.tsv"), delimiter="\t"))
+        (HERE / "previews" / ds).mkdir(parents=True, exist_ok=True)
+        md += [f"## {ds_name}", ""]
+        for band, band_name in BANDS:
+            items = [r for r in rows if r["band"] == band]
+            md += [f"### {band_name}", "", "<table>"]
+            for i in range(0, len(items), PER_ROW):
+                md.append("<tr>")
+                for r in items[i:i + PER_ROW]:
+                    rel = f"previews/{ds}/{band}_{int(r['n']):02d}.gif"
+                    pair_gif(HERE / ds / r["gt"], HERE / ds / r["recon"], HERE / rel, font)
+                    stim = f"clip {r['stimulus']}" if ds == "cc2017" else r["stimulus"]
+                    md.append(f'<td align="center"><img src="{rel}" width="{2 * TILE + GAP}"><br>'
+                              f'<sub>Subject {r["subject"]} · {stim}<br><i>{html.escape(r["caption"].strip())}</i>'
+                              f'</sub></td>')
+                md.append("</tr>")
+            md += ["</table>", ""]
+        print(f"{ds}: {len(rows)} gifs")
+    md += ["---", "",
+           "`cc2017/` and `bmd/` hold the videos (`*_gt.mp4`, `*_recon.mp4`) grouped into `best/`, "
+           "`medium/` and `worst/`. `index.html` is the gallery page (`python build_page.py` rebuilds it); "
+           "`python make_previews.py` rebuilds the animations and this README.", ""]
+    (HERE / "README.md").write_text("\n".join(md))
+    print("written README.md")
 
 
 if __name__ == "__main__":
